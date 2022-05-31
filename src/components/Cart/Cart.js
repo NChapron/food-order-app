@@ -7,7 +7,7 @@ import classes from "./Cart.module.css";
 import Checkout from "./Checkout";
 
 const Cart = (props) => {
-  const [checkoutIsShown, setCheckoutIsShown] = useState(false);
+  const [isCheckout, setIsCheckout] = useState(false);
 
   const cartCtx = useContext(CartContext);
 
@@ -21,6 +21,10 @@ const Cart = (props) => {
 
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
+  };
+
+  const orderHandler = () => {
+    setIsCheckout(true);
   };
 
   const cartItems = (
@@ -38,17 +42,18 @@ const Cart = (props) => {
     </ul>
   );
 
-  const checkoutHandler = () => {
-    setCheckoutIsShown(true);
-  };
-
-  if (checkoutIsShown) {
-    return (
-      <Modal onClick={props.onHideCart}>
-        <Checkout />
-      </Modal>
-    );
-  }
+  const modalActions = (
+    <div className={classes.actions}>
+      <button className={classes["button--alt"]} onClick={props.onHideCart}>
+        Close
+      </button>
+      {hasitems && (
+        <button className={classes.button} onClick={orderHandler}>
+          Order
+        </button>
+      )}
+    </div>
+  );
 
   return (
     <Modal onClick={props.onHideCart}>
@@ -57,16 +62,8 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      <div className={classes.actions}>
-        <button className={classes["button--alt"]} onClick={props.onHideCart}>
-          Close
-        </button>
-        {hasitems && (
-          <button className={classes.button} onClick={checkoutHandler}>
-            Order
-          </button>
-        )}
-      </div>
+      {isCheckout && <Checkout onCancel={props.onHideCart} />}
+      {!isCheckout && modalActions}
     </Modal>
   );
 };
