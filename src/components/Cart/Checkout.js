@@ -52,7 +52,12 @@ const Checkout = (props) => {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    console.log(nameInput, streetInput, postcodeInput, cityInput);
+    props.onConfirm({
+      name: nameInput,
+      street: streetInput,
+      postcode: postcodeInput,
+      city: cityInput,
+    });
 
     resetName();
     resetStreet();
